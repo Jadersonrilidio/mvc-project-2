@@ -4,8 +4,12 @@ require __DIR__.'/vendor/autoload.php';
 
 use \App\Http\Router;
 use \App\Utils\View;
+use \App\Utils\Environment;
 
-define('URL', 'http://localhost:8080/projects/mvc2');
+//LOAD ENVIRONMENT VARS FROM FILE ON ROOT
+Environment::load(__DIR__);
+
+define('URL', getenv('URL'));
 
 // DEFINE O VALOR PADRAO DAS VARIAVEIS
 View::init(array(

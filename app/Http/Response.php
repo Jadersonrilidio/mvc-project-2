@@ -43,7 +43,7 @@ class Response {
      * Metodo responsavel por alterar o contentType do response;
      * @var string-contentType
      */
-    public function setContentType($contentType) {
+    private function setContentType($contentType) {
         $this->contentType = $contentType;
         $this->addHeader('Content-Type', $contentType);
     }
@@ -53,7 +53,7 @@ class Response {
      * @var string-key
      * @var string-value
      */
-    public function addHeader($key, $value) {
+    private function addHeader($key, $value) {
         $this->headers[$key] = $value; 
     }
 

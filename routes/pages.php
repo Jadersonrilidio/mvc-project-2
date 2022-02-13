@@ -17,12 +17,26 @@ $router->get('/about', array(
     }
 ));
 
-// ROTA DINAMICA
-$router->get('/pagina/{idPagina}/{acao}', array(
-    function ($idPagina, $acao) {
-        return new Response(200,'pagina '.$idPagina.' - '.$acao);
+// ROTA DEPOIMENTOS
+$router->get('/testimonies', array(
+    function () {
+        return new Response(200,Pages\Testimony::getTestimonies());
     }
 ));
+
+// ROTA DEPOIMENTOS (INSERT)
+$router->post('/testimonies', array(
+    function () {
+        return new Response(200,Pages\Testimony::getTestimonies());
+    }
+));
+
+// // ROTA DINAMICA
+// $router->get('/pagina/{idPagina}/{acao}', array(
+//     function ($idPagina, $acao) {
+//         return new Response(200,'pagina '.$idPagina.' - '.$acao);
+//     }
+// ));
 
 
 ?>
