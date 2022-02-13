@@ -19,15 +19,15 @@ $router->get('/about', array(
 
 // ROTA DEPOIMENTOS
 $router->get('/testimonies', array(
-    function () {
-        return new Response(200,Pages\Testimony::getTestimonies());
+    function ($request) {
+        return new Response(200,Pages\Testimony::getTestimonies($request));
     }
 ));
 
 // ROTA DEPOIMENTOS (INSERT)
 $router->post('/testimonies', array(
-    function () {
-        return new Response(200,Pages\Testimony::getTestimonies());
+    function ($request) {
+        return new Response(200,Pages\Testimony::insertTestimony($request));
     }
 ));
 
