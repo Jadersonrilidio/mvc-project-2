@@ -3,6 +3,7 @@
 require __DIR__.'/../vendor/autoload.php';
 
 use \App\Utils;
+use \App\Http\Middleware\Queue as MiddlewareQueue;
 
 //LOAD ENVIRONMENT VARS FROM FILE ON ROOT
 Utils\Environment::load(__DIR__.'/../');
@@ -22,6 +23,16 @@ define('URL', getenv('URL'));
 // DEFINE O VALOR PADRAO DAS VARIAVEIS
 Utils\View::init(array(
     'URL' => URL
+));
+
+// DEFINE O MAPEAMENTO DE MIDDLEWARES
+MiddlewareQueue::setMap(array(
+    'maintenance' => \App\Http\Middleware\Maintenance::class
+));
+
+// DEFINE O MAPEAMENTO DE MIDDLEWARES PADROES, EXECUTADOS EM TODAS AS ROTAS
+MiddlewareQueue::setDefault(array(
+    'maintenance'
 ));
 
 ?>

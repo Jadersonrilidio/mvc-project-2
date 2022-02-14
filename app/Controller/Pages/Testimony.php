@@ -39,8 +39,7 @@ class Testimony extends Page
             $itens .= View::render('pages/testimony/item', array(
                 'name' => $testimony->name,
                 'message' => $testimony->message,
-                'date' => date('d/m/Y H:i:s', strtotime($testimony->date)),
-                'id' => $testimony->id
+                'date' => date('d/m/Y H:i:s', strtotime($testimony->date))
             ));
         }
 
@@ -53,8 +52,7 @@ class Testimony extends Page
      * @param Request
      * @return string
      */
-    public static function getTestimonies($request)
-    {   
+    public static function getTestimonies($request) {   
         // VIEW DA TESTIMONY
         $content =  View::render('pages/testimonies', array(
             'itens' => self::getTestimonyItems($request, $pagination),
