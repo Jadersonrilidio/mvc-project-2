@@ -83,8 +83,5 @@ class Page
         return View::render('pages/pagination/box', array(
             'links'  => $links
         ));
-        echo "<pre>";
-        print_r($link);
-        echo "</pre>";
     }
 }

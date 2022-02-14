@@ -45,6 +45,7 @@ class View {
         $vars = array_merge(self::$vars, $vars);
 
         $values =  array_values($vars);
+        
         $keys = array_keys($vars);
         $keys = array_map(function($item){
             return '{{'.$item.'}}';
