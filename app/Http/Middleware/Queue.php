@@ -77,7 +77,7 @@ class Queue {
 
         // VERIFICA O MAPEAMENTO
         if (!isset(self::$map[$middleware])) {
-            throw new \Exception("Problemasao processar o middleware da requisicao ", 500);
+            throw new \Exception("Problemas ao processar o middleware da requisicao ", 500);
         }
 
         // NEXT

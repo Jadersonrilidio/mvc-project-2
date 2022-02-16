@@ -2,7 +2,7 @@
 
 namespace App\Http\Middleware;
 
-class Maintenance {
+class Maintenance implements MiddlewareInterface {
     
     /**
      * Metodo responsavel por executar o middleware

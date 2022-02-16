@@ -27,7 +27,9 @@ Utils\View::init(array(
 
 // DEFINE O MAPEAMENTO DE MIDDLEWARES
 MiddlewareQueue::setMap(array(
-    'maintenance' => \App\Http\Middleware\Maintenance::class
+    'maintenance' => \App\Http\Middleware\Maintenance::class,
+    'require-admin-logout' => \App\Http\Middleware\RequireAdminLogout::class,
+    'require-admin-login' => \App\Http\Middleware\RequireAdminLogin::class
 ));
 
 // DEFINE O MAPEAMENTO DE MIDDLEWARES PADROES, EXECUTADOS EM TODAS AS ROTAS
