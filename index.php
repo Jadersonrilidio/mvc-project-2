@@ -9,8 +9,6 @@ $router = new Router(URL);
 
 // INCLUI AS ROTAS DE PAGINAS
 include __DIR__.'/routes/pages.php';
-
-// INCLUI AS ROTAS DO PAINEL ADMIN
 include __DIR__.'/routes/admin.php';
 
 // IMPRIME O RESPONSE DA ROTA

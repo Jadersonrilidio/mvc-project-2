@@ -7,25 +7,25 @@ use \App\Utils\View;
 /**
  * O COntroller e responsavel por pegar os dados do Model e inserir dentro da View para ser retornado
  */
-class Page
-{
-
-    // /**
-    //  * Metodo responsavel por renderizar o topo (cabecalho) da pagina
-    //  * @return string
-    //  */
-    // private static function getHeader()
-    // {
-    //     return View::render('pages/header');
-    // }
-
-    // /**
-    //  * Mtodo responsavel por renderizar o rodape da pagina
-    //  */
-    // private static function getFooter()
-    // {
-    //     return View::render('pages/footer');
-    // }
+class Page {
+    /**
+     * Modulos disponiveis no painel
+     * @var array
+     */
+    private static $modules = array(
+        'home' => array(
+            'label' => 'Home',
+            'link' => URL.'/admin'
+        ),
+        'testimonies' => array(
+            'label' => 'Testimonies',
+            'link' => URL.'/testimonies'
+        ),
+        'users' => array(
+            'label' => 'Users',
+            'link' => URL.'/users'
+        )
+    );
 
     /**
      * Metodo responsavel por retornar o conteudo (view) da estrutura generica de pagina do painel admin;
@@ -43,47 +43,46 @@ class Page
         ));
     }
 
-    // /**
-    //  * Metodo responsavel por renderizar o layout de paginacao
-    //  * @param Request
-    //  * @param Pagination
-    //  * @return string
-    //  */
-    // public static function getPagination($request, $pagination) {
-    //     // PAGINAS
-    //     $pages = $pagination->getPages();
+    /**
+     * Metodo responsavel por renderizar a view do painel com conteudos dinamicos
+     * @param string $title
+     * @param string $content
+     * @param string $currentModule
+     * @return string
+     */
+    public static function getPanel($title, $content, $currentModule) {
+        // RENDERIZA A VIEW DO PAINEL
+        $contentPanel = View::render('admin/panel', array(
+            'menu' => self::getMenu($currentModule),
+            'content' => $content
+        ));
         
-    //     // VERIFICA QUANTIDADE DE PAGINAS
-    //     if (count($pages) <= 1) return '';
+        // RETORNA A PAGINA RENDERIZADA
+        return self::getPage($title, $contentPanel);
+    }
 
-    //     // LINKS
-    //     $links = '';
+    /**
+     * Metodo responsavel por renderizar a view do menu do painel
+     * @param string $currentModule
+     * @return string
+     */
+    private static function getMenu($currentModule) {
+        // LINKS DO MENU
+        $links = '';
 
-    //     // URL DA NOSSA ROTA SEM OS GETS
-    //     $url = $request->getRouter()->getCurrentUrl();
-        
-    //     // GET
-    //     $queryParams = $request->getQueryParams();
+        // ITERA OS MODULOS
+        foreach (self::$modules as $hash => $module) {
+            $links .= View::render('admin/menu/link', array(
+                'label' => $module['label'],
+                'link' => $module['link'],
+                'current' => $hash == $currentModule ? 'active text-danger' : ''
+            ));
+        }
 
-    //     // RENDERIZA OS LINKS
-    //     foreach ($pages as $page) {
-    //         // ALTERA A PAGINA
-    //         $queryParams['page'] = $page['page'];
+        // RETORNA A RENDERIZACAO DO MENU
+        return View::render('admin/menu/box', array(
+            'links' => $links
+        ));
+    }
 
-    //         // LINKS
-    //         $link = $url.'?'.http_build_query($queryParams);
-
-    //         // RENDERIZACAO DA VIEW
-    //         $links .= View::render('pages/pagination/link', array(
-    //             'page'      => $page['page'],
-    //             'link'      => $link,
-    //             'active'    => $page['current'] ? 'active' : ''
-    //         ));
-    //     }
-        
-    //     // RENDERIZA BOX DE PAGINACAO
-    //     return View::render('pages/pagination/box', array(
-    //         'links'  => $links
-    //     ));
-    // }
 }

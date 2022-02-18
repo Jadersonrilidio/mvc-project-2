@@ -11,14 +11,12 @@ class Login extends Page {
     /**
      * Metodo responsavel retornar a renderizacao da pagina de login
      * @param Request $request
-     * @param string|null $errorMessage
+     * @param string|null $errorMsg
      * @return string
      */
-    public static function getLogin($request, $errorMessage = null) {
+    public static function getLogin($request, $errorMsg = null) {
         // VIEW DE STATUS
-        $status = !is_null($errorMessage) 
-            ? View::render('admin/login/status', array('message' => $errorMessage)) 
-            : '';
+        $status = !is_null($errorMsg) ? Alert::getDanger($errorMsg) : '';
 
         // CONTEUDO DA PAGINA DE LOGIN
         $content = View::render('admin/login', array(
