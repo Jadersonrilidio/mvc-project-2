@@ -1,0 +1,29 @@
+<h1> {{title}} </h1>
+
+<hr>
+
+<section id="form">
+
+    <form method="POST">
+
+        <div class="form-group">
+
+            <h3> Voce deseja realmente deletar o depoimento abaixo: </h3>
+            
+            <div class="card text-dark mb-3">
+                <h5 class="card-header"> {{name}} <small> {{date}} </small> </h5>
+                <div class="card-body"> {{message}} </div>
+            </div>
+        </div>
+
+        <div class="form-group mt-3">
+            <button type="submit" class="btn btn-danger"> Deletar </button>
+            <a href="{{URL}}/admin/testimonies">
+                <button type="button" class="btn btn-warning mx-4"> Voltar </button>
+            </a>
+        </div>
+
+    </form>
+    
+</section>
+

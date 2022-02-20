@@ -5,7 +5,7 @@ namespace App\Controller\Admin;
 use \App\Utils\View;
 
 /**
- * O COntroller e responsavel por pegar os dados do Model e inserir dentro da View para ser retornado
+ * O Controller e responsavel por pegar os dados do Model e inserir dentro da View para ser retornado
  */
 class Page {
     /**
@@ -19,11 +19,11 @@ class Page {
         ),
         'testimonies' => array(
             'label' => 'Testimonies',
-            'link' => URL.'/testimonies'
+            'link' => URL.'/admin/testimonies'
         ),
         'users' => array(
             'label' => 'Users',
-            'link' => URL.'/users'
+            'link' => URL.'/admin/users'
         )
     );
 
@@ -85,4 +85,50 @@ class Page {
         ));
     }
 
+        /**
+     * Metodo responsavel por renderizar o layout de paginacao
+     * @param Request
+     * @param Pagination
+     * @return string
+     */
+    public static function getPagination($request, $pagination) {
+        // PAGINAS
+        $pages = $pagination->getPages();
+        
+        // VERIFICA QUANTIDADE DE PAGINAS
+        if (count($pages) <= 1) return '';
+
+        // LINKS
+        $links = '';
+
+        // URL DA NOSSA ROTA SEM OS GETS
+        $url = $request->getRouter()->getCurrentUrl();
+        
+        // GET
+        $queryParams = $request->getQueryParams();
+
+        // RENDERIZA OS LINKS
+        foreach ($pages as $page) {
+            // ALTERA A PAGINA
+            $queryParams['page'] = $page['page'];
+
+            // LINKS
+            $link = $url.'?'.http_build_query($queryParams);
+
+            // RENDERIZACAO DA VIEW
+            $links .= View::render('admin/pagination/link', array(
+                'page'      => $page['page'],
+                'link'      => $link,
+                'active'    => $page['current'] ? 'active' : ''
+            ));
+        }
+        
+        // RENDERIZA BOX DE PAGINACAO
+        return View::render('admin/pagination/box', array(
+            'links'  => $links
+        ));
+    }
+
 }
+
+?>

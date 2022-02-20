@@ -56,7 +56,7 @@ class Testimony extends Page
         // VIEW DA TESTIMONY
         $content =  View::render('pages/testimonies', array(
             'itens' => self::getTestimonyItems($request, $pagination),
-            'pagination' => Parent::getPagination($request, $pagination)
+            'pagination' => parent::getPagination($request, $pagination)
         ));
 
         // RETORNA A VIEW DA PAGINA

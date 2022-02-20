@@ -51,6 +51,25 @@ class Testimony {
     }
 
     /**
+     * Metodo reponsavel por atualizar os dados do banco com a instancia atual
+     * @return boolean
+     */
+    public function atualizar() {
+        return (new Database('testimonies'))->update('id = '.$this->id, array(
+            'name' => $this->name,
+            'message' => $this->message
+        )); 
+    }
+
+    /**
+     * Metodo reponsavel excluir os dados do banco com a instancia atual
+     * @return boolean
+     */
+    public function excluir() {
+        return (new Database('testimonies'))->delete('id = '.$this->id); 
+    }
+
+    /**
      * Metodo responsavel por retornar depoimentos
      * @param string
      * @param string
@@ -60,6 +79,15 @@ class Testimony {
      */
     public static function getTestimonies($where = null, $order = null, $limit = null, $fields = '*') {
         return (new Database('testimonies'))->select($where, $order, $limit, $fields);
+     }
+
+     /**
+      * Metodo responsavel por retornar um depoimento com base no seu id
+      * @param int $id
+      * @return Testimony
+      */
+     public static function getTestimonyById($id) {
+        return self::getTestimonies('id = '.$id)->fetchObject(self::class);
      }
     
 }
