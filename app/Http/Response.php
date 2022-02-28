@@ -19,7 +19,7 @@ class Response {
      * Tipo de conteudo que esta sendo retornado pela classe Response;
      * @var string
      */
-    private $contentType = 'text/html';
+    private $contentType;
 
     /**
      * Conteudo do Response;
@@ -29,9 +29,9 @@ class Response {
 
     /**
      * Metodo responsavel por iniciar a classe (instancia de classe) e definir os valores;
-     * @param integer-httpCode
-     * @param mixed-content
-     * @param string-contentType
+     * @param integer
+     * @param mixed
+     * @param string
      */
     public function __construct($httpCode, $content, $contentType = 'text/html') {
         $this->httpCode = $httpCode;
@@ -41,7 +41,7 @@ class Response {
 
     /**
      * Metodo responsavel por alterar o contentType do response;
-     * @var string-contentType
+     * @var string
      */
     private function setContentType($contentType) {
         $this->contentType = $contentType;
@@ -50,8 +50,8 @@ class Response {
 
     /**
      * Metodo responsavel por adicionar um registro no header (cabecalho) de response;
-     * @var string-key
-     * @var string-value
+     * @var string
+     * @var string
      */
     private function addHeader($key, $value) {
         $this->headers[$key] = $value; 
@@ -82,6 +82,14 @@ class Response {
         switch ($this->contentType) {
             case 'text/html':
                 echo $this->content;
+                exit;
+            case 'application/json':
+                echo json_encode($this->content, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
+                exit;
+            default:
+                echo 'Error: Content-Type not recognized. <br><br><pre>';
+                print_r($this->content);
+                echo '</pre>';
                 exit;
         }
     }

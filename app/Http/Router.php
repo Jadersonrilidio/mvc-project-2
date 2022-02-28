@@ -7,7 +7,8 @@ use \Exception;
 use \ReflectionFunction;
 use \App\Http\Middleware\Queue as MiddlewareQueue;
 
-class Router {
+class Router
+{
 
     /**
      * URL completa da projeto (a raiz do projeto);
@@ -34,19 +35,36 @@ class Router {
     private $request;
 
     /**
+     * Content type padrao do response
+     * @param string
+     */
+    private $contentType = 'text/html';
+
+    /**
      * Metodo responsavel por iniciar a classel
      * @param string-url
      */
-    public function __construct($url) {
+    public function __construct($url)
+    {
         $this->request = new Request($this);
         $this->url = $url;
         $this->setPrefix();
     }
 
     /**
+     * Metodo responsavel por alterar o valor do content type
+     * @param string
+     */
+    public function setContentType($contentType)
+    {
+        $this->contentType = $contentType;
+    }
+
+    /**
      * Metodo responsavel por definir o prefixo das rotas;
      */
-    private function setPrefix() {
+    private function setPrefix()
+    {
         // INFORMACOES DA URL ATUAL
         $parseUrl = parse_url($this->url);
 
@@ -60,7 +78,8 @@ class Router {
      * @param string-route
      * @param array-params
      */
-    private function addRoute($method, $route, $params = array()) {
+    private function addRoute($method, $route, $params = array())
+    {
         // VALIDACAO DOS PARAMETROS
         foreach ($params as $key => $value) {
             if ($value instanceof Closure) {
@@ -81,9 +100,9 @@ class Router {
             $route = preg_replace($patternVariable, '(.*?)', $route);
             $params['variables'] = $matches[1];
         }
-        
+
         // PADRAO DE VALIDACAO DA URL
-        $patternRoute = '/^'.str_replace('/', '\/', $route).'$/';
+        $patternRoute = '/^' . str_replace('/', '\/', $route) . '$/';
 
         // ADICIONA A ROTA DENTRO DA CLASSE
         $this->routes[$patternRoute][$method] = $params;
@@ -94,7 +113,8 @@ class Router {
      * @param string-route
      * @param array-params
      */
-    public function get($route, $params = array()) {
+    public function get($route, $params = array())
+    {
         $this->addRoute('GET', $route, $params);
     }
 
@@ -103,7 +123,8 @@ class Router {
      * @param string-route
      * @param array-params
      */
-    public function post($route, $params = array()) {
+    public function post($route, $params = array())
+    {
         $this->addRoute('POST', $route, $params);
     }
 
@@ -112,7 +133,8 @@ class Router {
      * @param string-route
      * @param array-params
      */
-    public function put($route, $params = array()) {
+    public function put($route, $params = array())
+    {
         $this->addRoute('PUT', $route, $params);
     }
 
@@ -121,7 +143,8 @@ class Router {
      * @param string-route
      * @param array-params
      */
-    public function delete($route, $params = array()) {
+    public function delete($route, $params = array())
+    {
         $this->addRoute('DELETE', $route, $params);
     }
 
@@ -129,7 +152,8 @@ class Router {
      * Metodo responsavel por retornar a URI desconsiderando o prefixo;
      * @return string
      */
-    private function getUri() {
+    private function getUri()
+    {
         // URI DA REQUEST
         $uri = $this->request->getUri();
 
@@ -137,14 +161,15 @@ class Router {
         $xUri = strlen($this->prefix) ? explode($this->prefix, $uri) : array($uri);
 
         // RETORNA A URI SEM PREFIXO
-        return end($xUri);
+        return rtrim(end($xUri), '/');
     }
 
     /**
      * Metodo responsavel por retornar os dados da rota atual;
      * @return array
      */
-    private function getRoute() {
+    private function getRoute()
+    {
         // URI
         $uri = $this->getUri();
 
@@ -159,7 +184,7 @@ class Router {
                 if (isset($methods[$httpMethod])) {
                     // REMOVE A PRIMEIRA POSICAO
                     unset($matches[0]);
-                    
+
                     // VARIAVEIS PROCESSADAS
                     $keys = $methods[$httpMethod]['variables'];
                     $methods[$httpMethod]['variables'] = array_combine($keys, $matches);
@@ -180,12 +205,12 @@ class Router {
      * Metodo responsavel por executar a rota atual;
      * @return Response
      */
-    public function run() {
-        try 
-        {
+    public function run()
+    {
+        try {
             // OBTEM A ROTA ATUAL
             $route = $this->getRoute();
-            
+
             // VERIFICA O CONTROLADOR
             if (!isset($route['controller'])) {
                 throw new Exception("A URL nao pode ser processada! ", 500);
@@ -203,10 +228,27 @@ class Router {
 
             // RETORNA A EXECUCAO DA FILA DE MIDDLEWARES
             return (new MiddlewareQueue($route['middlewares'], $route['controller'], $args))->next($this->request);
+        } catch (Exception $e) {
+            return new Response($e->getCode(), $this->getErrorMessage($e->getMessage()), $this->contentType);
         }
-        catch (Exception $e)
-        {
-            return new Response($e->getCode(), $e->getMessage());
+    }
+
+    /**
+     * Metodo responsavel por retornar a mensagem de erro de acordo com o content type
+     * @param string
+     * @return mixed
+     */
+    private function getErrorMessage($message)
+    {
+        switch ($this->contentType) {
+            case 'application/json':
+                return array(
+                    'error' => $message
+                );
+                break;
+            default:
+                return $message;
+                break;
         }
     }
 
@@ -214,24 +256,22 @@ class Router {
      * Metodo responsavel por retornar a URL atual
      * @return string
      */
-    public function getCurrentUrl() {
-        return $this->url.$this->getUri();
+    public function getCurrentUrl()
+    {
+        return $this->url . $this->getUri();
     }
 
     /**
      * Metodo responsavel por redirecionar a url
      * @param string
      */
-    public function redirect($route) {
+    public function redirect($route)
+    {
         // URL
         $url = $this->url . $route;
 
         // EXECUTA O REDIRECT UTILIZANDO UM HEADER
-        header('location: '.$url);
+        header('location: ' . $url);
         exit;
-
     }
-
 }
-
-?>

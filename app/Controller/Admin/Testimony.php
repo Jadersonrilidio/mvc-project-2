@@ -11,7 +11,7 @@ class Testimony extends Page {
 
     /**
      * Metodo responsavel por renderizar a view de testimonies do painel admin
-     * @param Request $request
+     * @param Request
      * @return string
      */
     public static function getTestimonies($request) {
@@ -64,7 +64,7 @@ class Testimony extends Page {
 
     /**
      * Metodo responsavel por retornar e renderizar a pagina/formulario de cadastro de depoimentos
-     * @param Request $request
+     * @param Request
      * @return string
      */
     public static function getNewTestimony($request) {
@@ -81,7 +81,7 @@ class Testimony extends Page {
 
     /**
      * Metodo responsavel por cadastrar novo depoimento no db
-     * @param Request $request
+     * @param Request
      * @return string
      */
     public static function insertNewTestimony($request) {
@@ -102,8 +102,8 @@ class Testimony extends Page {
 
     /**
      * Metodo responsavel por retornar e renderizar a pagina/formulario de edicao de depoimentos
-     * @param Request $request
-     * @param int $id
+     * @param Request
+     * @param int
      * @return string
      */
     public static function getEditTestimony($request, $id) {
@@ -129,7 +129,7 @@ class Testimony extends Page {
 
     /**
      * Metodo responsavel
-     * @param Request $request
+     * @param Request
      * @return string
      */
     private static function getStatus($request) {
@@ -155,8 +155,8 @@ class Testimony extends Page {
 
     /**
      * Metodo responsavel por atualizar depoimentos no banco de dados
-     * @param Request $request
-     * @param int $id
+     * @param Request
+     * @param int
      * @return string
      */
     public static function setEditTestimony($request, $id) {
@@ -185,8 +185,8 @@ class Testimony extends Page {
 
     /**
      * Metodo responsavel por retornar e renderizar o formulario de exclusao de depoimentos
-     * @param Request $request
-     * @param int $id
+     * @param Request
+     * @param int
      * @return string
      */
     public static function getDeleteTestimony($request, $id) {
@@ -212,8 +212,8 @@ class Testimony extends Page {
 
     /**
      * Metodo responsavel por atualizar depoimentos no banco de dados
-     * @param Request $request
-     * @param int $id
+     * @param Request
+     * @param int
      * @return string
      */
     public static function setDeleteTestimony($request, $id) {
@@ -238,7 +238,7 @@ class Testimony extends Page {
 
     /**
      * MY FUNCTION TO MAKE MESSAGE SHORTER ON TABLES
-     * @param string @message
+     * @param string
      * @return string
      */
     private static function cutMessage($message) {
