@@ -6,6 +6,12 @@ use \PDO;
 use \PDOException;
 
 class Database { 
+  
+  /**
+   * Drive (nome) do banco de dados em uso
+   * @var string
+   */
+  private static $drive;
 
   /**
    * Host de conexão com o banco de dados
@@ -57,7 +63,8 @@ class Database {
    * @param  string  $pass
    * @param  integer $port
    */
-  public static function config($host,$name,$user,$pass,$port = 3306){
+  public static function config($drive,$host,$name,$user,$pass,$port = 3306){
+    self::$drive = $drive;
     self::$host = $host;
     self::$name = $name;
     self::$user = $user;
@@ -79,7 +86,7 @@ class Database {
    */
   private function setConnection(){
     try{
-      $this->connection = new PDO('mysql:host='.self::$host.';dbname='.self::$name.';port='.self::$port,self::$user,self::$pass);
+      $this->connection = new PDO(self::$drive.':host='.self::$host.';dbname='.self::$name.';port='.self::$port,self::$user,self::$pass);
       $this->connection->setAttribute(PDO::ATTR_ERRMODE,PDO::ERRMODE_EXCEPTION);
     }catch(PDOException $e){
       die('ERROR: '.$e->getMessage());

@@ -10,6 +10,7 @@ Utils\Environment::load(__DIR__.'/../');
 
 // DEFINE AS CONFIGURACOES DE BANCO DE DADOS
 Utils\Database::config(
+    getenv('DB_DRIVE'), 
     getenv('DB_HOST'), 
     getenv('DB_NAME'), 
     getenv('DB_USER'), 
