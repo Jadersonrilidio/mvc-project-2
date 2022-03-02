@@ -28,10 +28,11 @@ Utils\View::init(array(
 
 // DEFINE O MAPEAMENTO DE MIDDLEWARES
 MiddlewareQueue::setMap(array(
-    'maintenance' => \App\Http\Middleware\Maintenance::class,
-    'api' => \App\Http\Middleware\Api::class,
+    'maintenance'          => \App\Http\Middleware\Maintenance::class,
     'require-admin-logout' => \App\Http\Middleware\RequireAdminLogout::class,
-    'require-admin-login' => \App\Http\Middleware\RequireAdminLogin::class
+    'require-admin-login'  => \App\Http\Middleware\RequireAdminLogin::class,
+    'api'                  => \App\Http\Middleware\Api::class,
+    'user-basic-auth'      => \App\Http\Middleware\UserBasicAuth::class
 ));
 
 // DEFINE O MAPEAMENTO DE MIDDLEWARES PADROES, EXECUTADOS EM TODAS AS ROTAS

@@ -7,14 +7,16 @@ use App\Utils\Pagination;
 use App\Utils\Database;
 use App\Model\Entity;
 
-class Testimony extends Page {
+class Testimony extends Page
+{
 
     /**
      * Metodo responsavel por renderizar a view de testimonies do painel admin
      * @param Request
      * @return string
      */
-    public static function getTestimonies($request) {
+    public static function getTestimonies($request)
+    {
         // CONTEUDO DA TESTIMONIES
         $content = View::render('admin/modules/testimonies/index', array(
             'rows' => self::getTestimonyRows($request, $pagination),
@@ -25,26 +27,27 @@ class Testimony extends Page {
         return parent::getPanel('JayDev - Admin Testimonies', $content, 'testimonies');
     }
 
-     /**
+    /**
      * Metodo responsavel por obter a renderizacao dos itens de depoimentos para a pagina
      * @param Request
      * @param Pagination
      * @return string
      */
-    private static function getTestimonyRows($request, &$pagination) {
+    private static function getTestimonyRows($request, &$pagination)
+    {
         // DEPOIMENTOS
         $rows = '';
 
         // QUANTIDADE TOTAL DE REGISTROS
         $quantidadeTotal = Entity\Testimony::getTestimonies(null, null, null, 'COUNT(*) as  qtde')->fetchObject()->qtde;
-        
+
         // PAGINA ATUAL
         $queryParams = $request->getQueryParams();
         $page = $queryParams['page'] ?? 1;
-        
+
         // INSTANCIA DE PAGINACAO
         $pagination = new Pagination($quantidadeTotal, $page, 3);
-        
+
         // INSTANCIA DE RESULTADOS DA PAGINA
         $result = Entity\Testimony::getTestimonies(null, 'id DESC', $pagination->getLimit());
 
@@ -67,7 +70,8 @@ class Testimony extends Page {
      * @param Request
      * @return string
      */
-    public static function getNewTestimony($request) {
+    public static function getNewTestimony($request)
+    {
         // CONTEUDO DO FORMULARIO
         $content = View::render('admin/modules/testimonies/form', array(
             'title' => 'Cadastrar Depoimento',
@@ -84,7 +88,8 @@ class Testimony extends Page {
      * @param Request
      * @return string
      */
-    public static function insertNewTestimony($request) {
+    public static function setNewTestimony($request)
+    {
         // POST VARS
         $postVars = $request->getPostVars();
 
@@ -95,7 +100,7 @@ class Testimony extends Page {
 
         // EXECUTA O CADASTRO NO BANCO DE DADOS
         $testimony->cadastrar();
-        
+
         // REDIRECIONA PARA A PAGINA DE EDICAO
         $request->getRouter()->redirect('/admin/testimonies/' . $testimony->id . '/edit?status=created');
     }
@@ -106,7 +111,8 @@ class Testimony extends Page {
      * @param int
      * @return string
      */
-    public static function getEditTestimony($request, $id) {
+    public static function getEditTestimony($request, $id)
+    {
         // OBTEM O DEPOIMENTO DO BANCO DE DADOS
         $testimony = Entity\Testimony::getTestimonyById($id);
 
@@ -132,7 +138,8 @@ class Testimony extends Page {
      * @param Request
      * @return string
      */
-    private static function getStatus($request) {
+    private static function getStatus($request)
+    {
         // QUERY PARAMS
         $queryParams = $request->getQueryParams();
 
@@ -159,7 +166,8 @@ class Testimony extends Page {
      * @param int
      * @return string
      */
-    public static function setEditTestimony($request, $id) {
+    public static function setEditTestimony($request, $id)
+    {
         // OBTEM O DEPOIMENTO DO BANCO DE DADOS
         $testimony = Entity\Testimony::getTestimonyById($id);
 
@@ -189,7 +197,8 @@ class Testimony extends Page {
      * @param int
      * @return string
      */
-    public static function getDeleteTestimony($request, $id) {
+    public static function getDeleteTestimony($request, $id)
+    {
         // OBTEM O DEPOIMENTO DO BANCO DE DADOS
         $testimony = Entity\Testimony::getTestimonyById($id);
 
@@ -216,7 +225,8 @@ class Testimony extends Page {
      * @param int
      * @return string
      */
-    public static function setDeleteTestimony($request, $id) {
+    public static function setDeleteTestimony($request, $id)
+    {
         // OBTEM O DEPOIMENTO DO BANCO DE DADOS
         $testimony = Entity\Testimony::getTestimonyById($id);
 
@@ -241,9 +251,9 @@ class Testimony extends Page {
      * @param string
      * @return string
      */
-    private static function cutMessage($message) {
+    private static function cutMessage($message)
+    {
         $message = wordwrap($message, 270, ' ...CUT', true);
         return explode('CUT', $message)[0];
     }
-
 }

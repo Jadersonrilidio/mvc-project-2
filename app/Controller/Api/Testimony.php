@@ -2,7 +2,7 @@
 
 namespace App\Controller\Api;
 
-use App\Model\Entity;
+use App\Model\Entity\Testimony as EntityTestimony;
 use App\Utils\Pagination;
 use \Exception;
 
@@ -21,7 +21,7 @@ class Testimony extends Api
         $itens = array();
 
         // QUANTIDADE TOTAL DE REGISTROS
-        $quantidadeTotal = Entity\Testimony::getTestimonies(null, null, null, 'COUNT(*) as  qtde')->fetchObject()->qtde;
+        $quantidadeTotal = EntityTestimony::getTestimonies(null, null, null, 'COUNT(*) as  qtde')->fetchObject()->qtde;
 
         // PAGINA ATUAL
         $queryParams = $request->getQueryParams();
@@ -31,10 +31,10 @@ class Testimony extends Api
         $pagination = new Pagination($quantidadeTotal, $page, 5);
 
         // INSTANCIA DE RESULTADOS DA PAGINA
-        $result = Entity\Testimony::getTestimonies(null, 'id DESC', $pagination->getLimit());
+        $result = EntityTestimony::getTestimonies(null, 'id DESC', $pagination->getLimit());
 
         // RENDERIZA O ITEM
-        while ($testimony = $result->fetchObject(Entity\Testimony::class)) {
+        while ($testimony = $result->fetchObject(EntityTestimony::class)) {
             $itens[] = array(
                 'id' => (int) $testimony->id,
                 'name' => $testimony->name,
@@ -46,30 +46,6 @@ class Testimony extends Api
         // RETORNA OS DEPOIMENTOS
         return $itens;
     }
-
-    // /**
-    //  * Metodo responsavel por retornar um depoimento por sei id do banco de dados
-    //  * @param Request
-    //  * @return Entity\Testimony
-    //  */
-    // public static function getTestimonyById($request)
-    // {
-    //     // ID DO DEPOIMENTO
-    //     $queryParams = $request->getQueryParams();
-    //     $id = $queryParams['testimony'] ?? null;
-
-    //     // VALIDA ID DO DEPOIMENTO NA GET
-    //     if (!$id) return array();
-
-    //     //  ENCONTRA O DEPOIMENTO NO BANCO DE DADOS
-    //     $testimony = Entity\Testimony::getTestimonyById($id);
-
-    //     // VALIDA DEPOIMENTO ENCONTRADO NO BANCO DE DADOS
-    //     if (!$testimony) return array();
-
-    //     // RETORNA O DEPOIMENTO
-    //     return $testimony;
-    // }
 
     /**
      * Metodo responsavel por retornar os depoimentos na API
@@ -98,14 +74,114 @@ class Testimony extends Api
         }
 
         // BUSCA O DEPOIMENTO DO BANCO DE DADOS
-        $testimony = Entity\Testimony::getTestimonyById($id);
+        $testimony = EntityTestimony::getTestimonyById($id);
 
         // VALIDA SE O DEPOIMENTO EXISTE
-        if (!$testimony instanceof Entity\Testimony) {
+        if (!$testimony instanceof EntityTestimony) {
             throw new Exception("Testimony id '" . $id . "' not found.", 404);
         }
 
         // RETORNA OS DETALHES DO DEPOIMENTO
+        return array(
+            'id' => (int) $testimony->id,
+            'name' => $testimony->name,
+            'message' => $testimony->message,
+            'date' => $testimony->date
+        );
+    }
+
+    /**
+     * Metodo responsavel por cadastrar um novo depoimento
+     * @param Request
+     * @return array
+     */
+    public static function setNewTestimony($request)
+    {
+        // POST VARS
+        $postVars = $request->getPostVars();
+
+        // VALIDA CAMPOS OBRIGATORIOS
+        if (empty($postVars['name']) or !isset($postVars['name']) or empty($postVars['message']) or !isset($postVars['message'])) {
+            throw new Exception("Fields name and message are mandatory", 400);
+        }
+
+        // NOVA INSTANCIA DE DEPOIMENTO
+        $testimony = new EntityTestimony;
+        $testimony->name = $postVars['name'];
+        $testimony->message = $postVars['message'];
+
+        // EXECUTA O CADASTRO NO BANCO DE DADOS
+        $testimony->cadastrar();
+
+        // RETORNA DEPOIMENTO CADASTRADO
+        return array(
+            'id' => (int) $testimony->id,
+            'name' => $testimony->name,
+            'message' => $testimony->message,
+            'date' => $testimony->date
+        );
+    }
+
+    /**
+     * Metodo responsavel por atualizar um depoimento
+     * @param Request
+     * @param int
+     * @return array
+     */
+    public static function setEditTestimony($request, $id)
+    {
+        // POST VARS
+        $postVars = $request->getPostVars();
+
+        // VALIDA CAMPOS OBRIGATORIOS
+        if (empty($postVars['name']) or !isset($postVars['name']) or empty($postVars['message']) or !isset($postVars['message'])) {
+            throw new Exception("Fields name and message are mandatory", 400);
+        }
+
+        // BUSCA O DEPOIMENTO DO BANCO DE DADOS
+        $testimony = EntityTestimony::getTestimonyById($id);
+
+        // VALIDA DEPOIMENTO
+        if (!$testimony instanceof EntityTestimony) {
+            throw new Exception("Testimony not found. Invalid id", 403);
+        }
+
+        // ATUALIZA O DEPOIMENTO
+        $testimony->name = $postVars['name'];
+        $testimony->message = $postVars['message'];
+
+        // EXECUTA A ATUALIZACAO NO BANCO DE DADOS
+        $testimony->atualizar();
+
+        // RETORNA DEPOIMENTO ATUALIZADO
+        return array(
+            'id' => (int) $testimony->id,
+            'name' => $testimony->name,
+            'message' => $testimony->message,
+            'date' => $testimony->date
+        );
+    }
+
+        /**
+     * Metodo responsavel por excluir um depoimento
+     * @param Request
+     * @param int
+     * @return array
+     */
+    public static function setDeleteTestimony($request, $id)
+    {
+        // BUSCA O DEPOIMENTO DO BANCO DE DADOS
+        $testimony = EntityTestimony::getTestimonyById($id);
+
+        // VALIDA DEPOIMENTO
+        if (!$testimony instanceof EntityTestimony) {
+            throw new Exception("Testimony not found. Invalid id", 403);
+        }
+
+        // EXECUTA A EXCLUSAO NO BANCO DE DADOS
+        $testimony->excluir();
+
+        // RETORNA DEPOIMENTO EXCLUIDO
         return array(
             'id' => (int) $testimony->id,
             'name' => $testimony->name,

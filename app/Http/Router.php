@@ -161,7 +161,7 @@ class Router
         $xUri = strlen($this->prefix) ? explode($this->prefix, $uri) : array($uri);
 
         // RETORNA A URI SEM PREFIXO
-        return rtrim(end($xUri), '/');
+        return end($xUri) == '/' ? end($xUri) : rtrim(end($xUri), '/');
     }
 
     /**

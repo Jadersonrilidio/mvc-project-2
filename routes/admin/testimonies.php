@@ -29,7 +29,7 @@ $router->post('/admin/testimonies/new', array(
         'require-admin-login'
     ),
     function ($request) {
-        return new Response(200,Admin\Testimony::insertNewTestimony($request));
+        return new Response(200,Admin\Testimony::setNewTestimony($request));
     }
 ));
 

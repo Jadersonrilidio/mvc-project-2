@@ -1,7 +1,11 @@
 <?php
+
 namespace App\Http;
 
-class Request {
+use App\Utils\Debugger;
+
+class Request
+{
 
     /**
      * Instancia de Router
@@ -43,19 +47,37 @@ class Request {
      * Metodo reponsavel por construir uma instancia de Request
      * @param Router
      */
-    public function __construct($router) {
+    public function __construct($router)
+    {
         $this->router = $router;
         $this->queryParams = $_GET ?? array();
-        $this->postVars = $_POST ?? array();
         $this->headers = getallheaders();
         $this->httpMethod = $_SERVER['REQUEST_METHOD'];
+        $this->setPostVars();
         $this->setUri();
     }
-    
+
+    /**
+     * Metodo responsavel por definir as variaveis do POST
+     */
+    private function setPostVars()
+    {
+        // VERIFICA O METODO DA REQUISICAO
+        if ($this->httpMethod == 'GET') return false;
+
+        // POST PADRAO
+        $this->postVars = $_POST ?? array();
+
+        // POST JSON
+        $inputRaw = file_get_contents('php://input');
+        $this->postVars = (strlen($inputRaw) and empty($_POST)) ? json_decode($inputRaw, true) : $this->postVars;
+    }
+
     /**
      * Metodo responsavel por definir a URI
      */
-    private function setUri() {
+    private function setUri()
+    {
         // URI COMPLETA COM GETS
         $this->uri = $_SERVER['REQUEST_URI'];
 
@@ -66,11 +88,12 @@ class Request {
         $this->uri = $xUri[0];
     }
 
-        /**
+    /**
      * Metodo responsavel por retornar a instancia de Router
      * @return string
      */
-    public function getRouter() {
+    public function getRouter()
+    {
         return $this->router;
     }
 
@@ -78,7 +101,8 @@ class Request {
      * Metodo responsavel por retornar o metodo HTTP da requisicao
      * @return string
      */
-    public function getHttpMethod() {
+    public function getHttpMethod()
+    {
         return $this->httpMethod;
     }
 
@@ -86,7 +110,8 @@ class Request {
      * Metodo responsavel por retornar a URI da nossa requisicao
      * @return string
      */
-    public function getUri() {
+    public function getUri()
+    {
         return $this->uri;
     }
 
@@ -94,7 +119,8 @@ class Request {
      * Metodo responsavel por retornar os parametros (variaveis, GET) da URL
      * @return array
      */
-    public function getQueryParams() {
+    public function getQueryParams()
+    {
         return $this->queryParams;
     }
 
@@ -102,7 +128,8 @@ class Request {
      * Metodo responsavel por retornar as variavies do POST
      * @return array
      */
-    public function getPostVars() {
+    public function getPostVars()
+    {
         return $this->postVars;
     }
 
@@ -110,8 +137,8 @@ class Request {
      * Metodo responsavel por retornar os headers da requisicao
      * @return array
      */
-    public function getHeaders() {
+    public function getHeaders()
+    {
         return $this->headers;
     }
-
 }
