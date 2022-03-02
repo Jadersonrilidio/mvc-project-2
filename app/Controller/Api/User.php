@@ -17,23 +17,23 @@ class User extends Api
      */
     private static function getUserItens($request, &$pagination)
     {
-        // USUARIO
+        # USUARIO
         $itens = array();
 
-        // QUANTIDADE TOTAL DE REGISTROS
+        # QUANTIDADE TOTAL DE REGISTROS
         $quantidadeTotal = EntityUser::getUsers(null, null, null, 'COUNT(*) as  qtde')->fetchObject()->qtde;
 
-        // PAGINA ATUAL
+        # PAGINA ATUAL
         $queryParams = $request->getQueryParams();
         $page = $queryParams['page'] ?? 1;
 
-        // INSTANCIA DE PAGINACAO
+        # INSTANCIA DE PAGINACAO
         $pagination = new Pagination($quantidadeTotal, $page, 5);
 
-        // INSTANCIA DE RESULTADOS DA PAGINA
+        # INSTANCIA DE RESULTADOS DA PAGINA
         $result = EntityUser::getUsers(null, 'id DESC', $pagination->getLimit());
 
-        // 
+        # 
         while ($user = $result->fetchObject(EntityUser::class)) {
             $itens[] = array(
                 'id'       => (int) $user->id,
@@ -42,7 +42,7 @@ class User extends Api
             );
         }
 
-        // RETORNA OS USUARIOS
+        # RETORNA OS USUARIOS
         return $itens;
     }
 
@@ -67,20 +67,20 @@ class User extends Api
      */
     public static function getUser($request, $id)
     {
-        // VALIDA O ID DO USUARIO
+        # VALIDA O ID DO USUARIO
         if (!is_numeric($id)) {
             throw new Exception("Id '" . $id . "' type is not valid ", 400);
         }
 
-        // BUSCA O USUARIO DO BANCO DE DADOS
+        # BUSCA O USUARIO DO BANCO DE DADOS
         $user = EntityUser::getUserById($id);
 
-        // VALIDA SE O USUARIO EXISTE
+        # VALIDA SE O USUARIO EXISTE
         if (!$user instanceof EntityUser) {
             throw new Exception("user id '" . $id . "' not found.", 404);
         }
 
-        // RETORNA OS DETALHES DO USUARIO
+        # RETORNA OS DETALHES DO USUARIO
         return array(
             'id'       => (int) $user->id,
             'username' => $user->username,
@@ -95,10 +95,10 @@ class User extends Api
      */
     public static function setNewUser($request)
     {
-        // POST VARS
+        # POST VARS
         $postVars = $request->getPostVars();
 
-        // VALIDA CAMPOS OBRIGATORIOS
+        # VALIDA CAMPOS OBRIGATORIOS
         if (
             empty($postVars['username']) or !isset($postVars['username']) or
             empty($postVars['email'])    or !isset($postVars['email']) or
@@ -107,22 +107,22 @@ class User extends Api
             throw new Exception("Username, email and password are mandatory", 400);
         }
 
-        // VALIDA O EMAIL DE USUARIO
+        # VALIDA O EMAIL DE USUARIO
         $user = EntityUser::getUserByEmail($postVars['email']);
         if ($user instanceof EntityUser) {
             throw new Exception("Email already registered", 400);
         }
 
-        // NOVA INSTANCIA DE USUARIO
+        # NOVA INSTANCIA DE USUARIO
         $user = new EntityUser;
         $user->username = $postVars['username'];
         $user->email    = $postVars['email'];
         $user->password = password_hash($postVars['password'], PASSWORD_DEFAULT);
 
-        // EXECUTA O CADASTRO NO BANCO DE DADOS
+        # EXECUTA O CADASTRO NO BANCO DE DADOS
         $user->cadastrar();
 
-        // RETORNA USUARIO CADASTRADO
+        # RETORNA USUARIO CADASTRADO
         return array(
             'id'       => (int) $user->id,
             'username' => $user->username,
@@ -138,10 +138,10 @@ class User extends Api
      */
     public static function setEditUser($request, $id)
     {
-        // POST VARS
+        # POST VARS
         $postVars = $request->getPostVars();
 
-        // VALIDA CAMPOS OBRIGATORIOS
+        # VALIDA CAMPOS OBRIGATORIOS
         if (
             empty($postVars['username']) or !isset($postVars['username']) or
             empty($postVars['email'])    or !isset($postVars['email'])
@@ -149,28 +149,28 @@ class User extends Api
             throw new Exception("Username and email are mandatory", 400);
         }
 
-        // BUSCA O USUARIO DO BANCO DE DADOS
+        # BUSCA O USUARIO DO BANCO DE DADOS
         $user = EntityUser::getUserById($id);
 
-        // VALIDA USUARIO
+        # VALIDA USUARIO
         if (!$user instanceof EntityUser) {
             throw new Exception("user not found. Invalid id", 403);
         }
 
-        // VALIDA O EMAIL DE USUARIO
+        # VALIDA O EMAIL DE USUARIO
         $user2 = EntityUser::getUserByEmail($postVars['email']);
         if ($user2 instanceof EntityUser && $user2->id != $id) {
             throw new Exception("Email belongs to another user", 403);
         }
 
-        // ATUALIZA O USUARIO
+        # ATUALIZA O USUARIO
         $user->username = $postVars['username'];
         $user->email    = $postVars['email'];
 
-        // EXECUTA A ATUALIZACAO NO BANCO DE DADOS
+        # EXECUTA A ATUALIZACAO NO BANCO DE DADOS
         $user->atualizar();
 
-        // RETORNA USUARIO ATUALIZADO
+        # RETORNA USUARIO ATUALIZADO
         return array(
             'id'       => (int) $user->id,
             'username' => $user->username,
@@ -186,23 +186,41 @@ class User extends Api
      */
     public static function setDeleteUser($request, $id)
     {
-        // BUSCA O USUARIO DO BANCO DE DADOS
+        # BUSCA O USUARIO DO BANCO DE DADOS
         $user = EntityUser::getUserById($id);
 
-        // VALIDA USUARIO
+        # VALIDA USUARIO
         if (!$user instanceof EntityUser) {
             throw new Exception("user not found. Invalid id", 403);
         }
 
-        // IMPEDE EXCLUSAO DO PROPRIO CADASTRO
+        # IMPEDE EXCLUSAO DO PROPRIO CADASTRO
         if ($user->id == $request->user->id) {
             throw new Exception("not allowed exlude current user", 403);
         }
 
-        // EXECUTA A EXCLUSAO NO BANCO DE DADOS
+        # EXECUTA A EXCLUSAO NO BANCO DE DADOS
         $user->excluir();
 
-        // RETORNA USUARIO EXCLUIDO
+        # RETORNA USUARIO EXCLUIDO
+        return array(
+            'id'       => (int) $user->id,
+            'username' => $user->username,
+            'email'    => $user->email
+        );
+    }
+
+    /**
+     * Metodo responsavel por retornar o usuario atualmente conectado
+     * @param  Request
+     * @return array
+     */
+    public static function getCurrentUser($request)
+    {
+        # PEGA USUARIO ATUAL
+        $user = $request->user;
+
+        # RETORNA USUARIO ATUAL
         return array(
             'id'       => (int) $user->id,
             'username' => $user->username,
