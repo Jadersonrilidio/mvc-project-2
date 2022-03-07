@@ -30,12 +30,3 @@ $router->post('/testimonies', array(
         return new Response(200,Pages\Testimony::insertTestimony($request));
     }
 ));
-
-// // ROTA DINAMICA
-// $router->get('/pagina/{idPagina}/{acao}', array(
-//     function ($idPagina, $acao) {
-//         return new Response(200,'pagina '.$idPagina.' - '.$acao);
-//     }
-// ));
-
-?>

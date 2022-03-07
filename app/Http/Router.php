@@ -152,7 +152,7 @@ class Router
      * Metodo responsavel por retornar a URI desconsiderando o prefixo;
      * @return string
      */
-    private function getUri()
+    public function getUri()
     {
         // URI DA REQUEST
         $uri = $this->request->getUri();

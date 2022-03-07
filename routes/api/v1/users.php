@@ -7,7 +7,8 @@ use App\Controller\Api;
 $router->get('/api/v1/users', array(
     'middlewares' => array(
         'api',
-        'jwt-auth'
+        'jwt-auth',
+        'cache'
     ),
     function ($request) {
         return new Response(200, Api\User::getUsers($request), 'application/json');
@@ -29,7 +30,8 @@ $router->get('/api/v1/users/me', array(
 $router->get('/api/v1/users/{id}', array(
     'middlewares' => array(
         'api',
-        'jwt-auth'
+        'jwt-auth',
+        'cache'
     ),
     function ($request, $id) {
         return new Response(200, Api\User::getUser($request, $id), 'application/json');
