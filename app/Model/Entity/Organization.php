@@ -5,7 +5,8 @@ namespace App\Model\Entity;
 /**
  * Exemplo de um retorno do banco de dados (na realidade o processo e mais complexo)
  */
-class Organization {
+class Organization
+{
 
     /**
      * Id da organizacao
@@ -30,13 +31,4 @@ class Organization {
      * @var string
      */
     public $description = 'Aluno de TI e estudante aciduo, ainda aprendiz';
-
 }
-
-
-
-
-
-
-
-?>

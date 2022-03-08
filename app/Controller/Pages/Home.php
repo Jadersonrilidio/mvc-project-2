@@ -17,17 +17,15 @@ class Home extends Page
      */
     public static function getHome()
     {
-        // ORGANIZACAO 
+        # ORGANIZACAO 
         $obOrganization = new Organization;
 
-        // VIEW DA HOME
+        # VIEW DA HOME
         $content =  View::render('pages/home', array(
             'name' => $obOrganization->name
         ));
 
-        // RETORNA A VIEW DA PAGINA
+        # RETORNA A VIEW DA PAGINA
         return parent::getPage('JayDev - Home', $content);
     }
 }
-
-?>

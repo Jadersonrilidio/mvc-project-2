@@ -2,24 +2,23 @@
 
 namespace App\Http\Middleware;
 
-class Maintenance implements MiddlewareInterface {
-    
+class Maintenance implements MiddlewareInterface
+{
+
     /**
      * Metodo responsavel por executar o middleware
-     * @param Request $request
-     * @param Closure $next
+     * @param  Request $request
+     * @param  Closure $next
      * @return Response
      */
-    public function handle($request, $next) {
-        // VERIFICA O ESTADO DE MANUTENCAO DA PAGINA
+    public function handle($request, $next)
+    {
+        # VERIFICA O ESTADO DE MANUTENCAO DA PAGINA
         if (getenv('MAINTENANCE') == 'true') {
             throw new \Exception("Pagina em Manutencao, tente novamente mais tarde ", 200);
         }
 
-        // EXECUTA O PROXIMO NIVEL DO MIDDLEWARE
+        # EXECUTA O PROXIMO NIVEL DO MIDDLEWARE
         return $next($request);
     }
-
 }
-
-?>

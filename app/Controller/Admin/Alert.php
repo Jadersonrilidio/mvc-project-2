@@ -4,43 +4,46 @@ namespace App\Controller\Admin;
 
 use App\Utils\View;
 
-class Alert {
+class Alert
+{
 
     /**
      * Metodo reponsavel por retornar uma mensagem de sucesso
-     * @param string $message
+     * @param  string $message
      * @return string
      */
-    public static function getSuccess($message) {
+    public static function getSuccess($message)
+    {
         return View::render('admin/alert/status', array(
-            'type' => 'success',
+            'type'    => 'success',
             'message' => $message
         ));
     }
 
     /**
      * Metodo reponsavel por retornar uma mensagem de erro
-     * @param string $message
+     * @param  string $message
      * @return string
      */
-    public static function getDanger($message) {
+    public static function getDanger($message)
+    {
         return View::render('admin/alert/status', array(
-            'type' => 'danger',
+            'type'    => 'danger',
             'message' => $message
         ));
     }
 
-        /**
+    /**
      * Metodo reponsavel por retornar uma mensagem status tipo
-     * @param string $message
-     * @param string $type
+     * @param  string $message
+     * @param  string $type
      * @return string
      */
-    public static function getStatus($message, $type) {
+    public static function getStatus($message, $type)
+    {
         return View::render('admin/alert/status', array(
-            'type' => $type,
+            'type'    => $type,
             'message' => $message
         ));
     }
-
 }

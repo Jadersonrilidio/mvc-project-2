@@ -2,14 +2,14 @@
 
 namespace App\Http\Middleware;
 
-interface MiddlewareInterface {
-    
+interface MiddlewareInterface
+{
+
     /**
      * Metodo Abstrato responsavel por executar o middleware
-     * @param Request $request
-     * @param Closure $next
+     * @param  Request $request
+     * @param  Closure $next
      * @return Response
      */
     public function handle($request, $next);
-
 }

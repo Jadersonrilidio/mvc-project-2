@@ -3,7 +3,7 @@
 use App\Http\Response;
 use App\Controller\Api;
 
-// ROTA DE LISTAGEM DE DEPOIMENTOS
+# ROTA DE LISTAGEM DE DEPOIMENTOS
 $router->get('/api/v1/testimonies', array(
     'middlewares' => array(
         'api',
@@ -14,7 +14,7 @@ $router->get('/api/v1/testimonies', array(
     }
 ));
 
-// ROTA DE CONSULTA INDIVIDUAL DE DEPOIMENTOS
+# ROTA DE CONSULTA INDIVIDUAL DE DEPOIMENTOS
 $router->get('/api/v1/testimonies/{id}', array(
     'middlewares' => array(
         'api',
@@ -25,7 +25,7 @@ $router->get('/api/v1/testimonies/{id}', array(
     }
 ));
 
-// ROTA DE CADASTRO DE DEPOIMENTOS
+# ROTA DE CADASTRO DE DEPOIMENTOS
 $router->post('/api/v1/testimonies', array(
     'middlewares' => array(
         'api',
@@ -36,7 +36,7 @@ $router->post('/api/v1/testimonies', array(
     }
 ));
 
-// ROTA DE ATUALIZACAO DE DEPOIMENTOS
+# ROTA DE ATUALIZACAO DE DEPOIMENTOS
 $router->put('/api/v1/testimonies/{id}', array(
     'middlewares' => array(
         'api',
@@ -47,7 +47,7 @@ $router->put('/api/v1/testimonies/{id}', array(
     }
 ));
 
-// ROTA DE EXCLUSAO DE DEPOIMENTOS
+# ROTA DE EXCLUSAO DE DEPOIMENTOS
 $router->delete('/api/v1/testimonies/{id}', array(
     'middlewares' => array(
         'api',

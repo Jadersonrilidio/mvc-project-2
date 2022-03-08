@@ -4,15 +4,13 @@ namespace App\Http\Middleware;
 
 use App\Utils\Cache\File as CacheFile;
 
-use App\Utils\Debugger;
-
 class Cache implements MiddlewareInterface
 {
 
     /**
      * Metodo responsavel por executar o middleware
-     * @param Request $request
-     * @param Closure $next
+     * @param  Request $request
+     * @param  Closure $next
      * @return Response
      */
     public function handle($request, $next)
@@ -24,7 +22,7 @@ class Cache implements MiddlewareInterface
         $hash = $this->getHash($request);
 
         # RETORNA OS DADOS DO CACHE
-        return CacheFile::getCache($hash, getenv('CACHE_TIME'), function () use($request, $next) {
+        return CacheFile::getCache($hash, getenv('CACHE_TIME'), function () use ($request, $next) {
             return $next($request);
         });
     }
@@ -56,7 +54,7 @@ class Cache implements MiddlewareInterface
      * @return string
      */
     private function getHash($request)
-    {   
+    {
         # URI DA ROTA
         $uri = $request->getRouter()->getUri();
 
@@ -64,10 +62,10 @@ class Cache implements MiddlewareInterface
         $queryParams = $request->getQueryParams();
 
         # ADICIONA OS QUERY PARAMS A URI DA ROTA/PAGINA
-        $uri .= !empty($queryParams) ? '?'.http_build_query($queryParams) : '';
-        $uri = ltrim($uri, '/');
+        $uri .= !empty($queryParams) ? '?' . http_build_query($queryParams) : '';
+        $uri  = ltrim($uri, '/');
 
         # REMOVE AS BARRAS E RETORNA A HASH
-        return rtrim('route-'.preg_replace('/[^0-9a-zA-Z]/', '-', $uri), '-');
+        return rtrim('route-' . preg_replace('/[^0-9a-zA-Z]/', '-', $uri), '-');
     }
 }

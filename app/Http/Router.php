@@ -2,10 +2,10 @@
 
 namespace App\Http;
 
+use \App\Http\Middleware\Queue as MiddlewareQueue;
+use \ReflectionFunction;
 use \Closure;
 use \Exception;
-use \ReflectionFunction;
-use \App\Http\Middleware\Queue as MiddlewareQueue;
 
 class Router
 {
@@ -17,7 +17,7 @@ class Router
     private $url = '';
 
     /**
-     * Prefixo de todas as rotas (Ex: http://localhost:8080/projects/mvc2);
+     * Prefixo de todas as rotas (Ex: http:#localhost:8080/projects/mvc2);
      * @var string
      */
     private $prefix = '';
@@ -42,12 +42,12 @@ class Router
 
     /**
      * Metodo responsavel por iniciar a classel
-     * @param string-url
+     * @param string
      */
     public function __construct($url)
     {
         $this->request = new Request($this);
-        $this->url = $url;
+        $this->url     = $url;
         $this->setPrefix();
     }
 
@@ -65,22 +65,22 @@ class Router
      */
     private function setPrefix()
     {
-        // INFORMACOES DA URL ATUAL
+        # INFORMACOES DA URL ATUAL
         $parseUrl = parse_url($this->url);
 
-        // DEFINE O PREFIXO
+        # DEFINE O PREFIXO
         $this->prefix = $parseUrl['path'] ?? '';
     }
 
     /**
      * Metodo responsavel por adicionar uma rota na classe;
-     * @param string-method
-     * @param string-route
-     * @param array-params
+     * @param string
+     * @param string
+     * @param array
      */
     private function addRoute($method, $route, $params = array())
     {
-        // VALIDACAO DOS PARAMETROS
+        # VALIDACAO DOS PARAMETROS
         foreach ($params as $key => $value) {
             if ($value instanceof Closure) {
                 $params['controller'] = $value;
@@ -88,30 +88,30 @@ class Router
             }
         }
 
-        // MIDDLEWARES DA ROTA
+        # MIDDLEWARES DA ROTA
         $params['middlewares'] = $params['middlewares'] ?? [];
 
-        // VARIAVEIS DA ROTA
+        # VARIAVEIS DA ROTA
         $params['variables'] = [];
 
-        // PADRAO DE VALIDACAO DAS VARIAVEIS DAS ROTAS
+        # PADRAO DE VALIDACAO DAS VARIAVEIS DAS ROTAS
         $patternVariable = '/{(.*?)}/';
         if (preg_match_all($patternVariable, $route, $matches)) {
             $route = preg_replace($patternVariable, '(.*?)', $route);
             $params['variables'] = $matches[1];
         }
 
-        // PADRAO DE VALIDACAO DA URL
+        # PADRAO DE VALIDACAO DA URL
         $patternRoute = '/^' . str_replace('/', '\/', $route) . '$/';
 
-        // ADICIONA A ROTA DENTRO DA CLASSE
+        # ADICIONA A ROTA DENTRO DA CLASSE
         $this->routes[$patternRoute][$method] = $params;
     }
 
     /**
      * Metodo responsavel por definir uma rota de GET;
-     * @param string-route
-     * @param array-params
+     * @param string
+     * @param array
      */
     public function get($route, $params = array())
     {
@@ -120,8 +120,8 @@ class Router
 
     /**
      * Metodo responsavel por definir uma rota de POST;
-     * @param string-route
-     * @param array-params
+     * @param string
+     * @param array
      */
     public function post($route, $params = array())
     {
@@ -130,8 +130,8 @@ class Router
 
     /**
      * Metodo responsavel por definir uma rota de PUT;
-     * @param string-route
-     * @param array-params
+     * @param string
+     * @param array
      */
     public function put($route, $params = array())
     {
@@ -140,8 +140,8 @@ class Router
 
     /**
      * Metodo responsavel por definir uma rota de DELETE;
-     * @param string-route
-     * @param array-params
+     * @param string
+     * @param array
      */
     public function delete($route, $params = array())
     {
@@ -154,13 +154,13 @@ class Router
      */
     public function getUri()
     {
-        // URI DA REQUEST
+        # URI DA REQUEST
         $uri = $this->request->getUri();
 
-        // FATIA A URI COM PREFIXO
+        # FATIA A URI COM PREFIXO
         $xUri = strlen($this->prefix) ? explode($this->prefix, $uri) : array($uri);
 
-        // RETORNA A URI SEM PREFIXO
+        # RETORNA A URI SEM PREFIXO
         return end($xUri) == '/' ? end($xUri) : rtrim(end($xUri), '/');
     }
 
@@ -170,34 +170,34 @@ class Router
      */
     private function getRoute()
     {
-        // URI
+        # URI
         $uri = $this->getUri();
 
-        // METHOD
+        # METHOD
         $httpMethod = $this->request->getHttpMethod();
 
-        // VALIDA AS ROTAS
+        # VALIDA AS ROTAS
         foreach ($this->routes as $patternRoute => $methods) {
-            // VERIFICA SE A URI BATE COM O PADRAO
+            # VERIFICA SE A URI BATE COM O PADRAO
             if (preg_match($patternRoute, $uri, $matches)) {
-                // VERIFICA O METODO
+                # VERIFICA O METODO
                 if (isset($methods[$httpMethod])) {
-                    // REMOVE A PRIMEIRA POSICAO
+                    # REMOVE A PRIMEIRA POSICAO
                     unset($matches[0]);
 
-                    // VARIAVEIS PROCESSADAS
+                    # VARIAVEIS PROCESSADAS
                     $keys = $methods[$httpMethod]['variables'];
                     $methods[$httpMethod]['variables'] = array_combine($keys, $matches);
                     $methods[$httpMethod]['variables']['request'] = $this->request;
 
-                    //RETORNO DOS PARAMETROS DA ROTA
+                    #RETORNO DOS PARAMETROS DA ROTA
                     return $methods[$httpMethod];
                 }
-                // METODO NAO PERMITIDO DEFINIDO
+                # METODO NAO PERMITIDO DEFINIDO
                 throw new Exception("Error Processing Request: Metodo nao e permitido! ", 405);
             }
         }
-        // URL NAO ENCONTRADA
+        # URL NAO ENCONTRADA
         throw new Exception("URL nao encontrada! ", 404);
     }
 
@@ -208,25 +208,25 @@ class Router
     public function run()
     {
         try {
-            // OBTEM A ROTA ATUAL
+            # OBTEM A ROTA ATUAL
             $route = $this->getRoute();
 
-            // VERIFICA O CONTROLADOR
+            # VERIFICA O CONTROLADOR
             if (!isset($route['controller'])) {
                 throw new Exception("A URL nao pode ser processada! ", 500);
             }
 
-            // ARGUMENTOS DA FUNCAO
+            # ARGUMENTOS DA FUNCAO
             $args = [];
 
-            // REFLECTION
+            # REFLECTION
             $reflection = new ReflectionFunction($route['controller']);
             foreach ($reflection->getParameters() as $parameter) {
                 $name = $parameter->getName();
                 $args[$name] = $route['variables'][$name] ?? '';
             }
 
-            // RETORNA A EXECUCAO DA FILA DE MIDDLEWARES
+            # RETORNA A EXECUCAO DA FILA DE MIDDLEWARES
             return (new MiddlewareQueue($route['middlewares'], $route['controller'], $args))->next($this->request);
         } catch (Exception $e) {
             return new Response($e->getCode(), $this->getErrorMessage($e->getMessage()), $this->contentType);
@@ -235,7 +235,7 @@ class Router
 
     /**
      * Metodo responsavel por retornar a mensagem de erro de acordo com o content type
-     * @param string
+     * @param  string
      * @return mixed
      */
     private function getErrorMessage($message)
@@ -267,10 +267,10 @@ class Router
      */
     public function redirect($route)
     {
-        // URL
+        # URL
         $url = $this->url . $route;
 
-        // EXECUTA O REDIRECT UTILIZANDO UM HEADER
+        # EXECUTA O REDIRECT UTILIZANDO UM HEADER
         header('location: ' . $url);
         exit;
     }

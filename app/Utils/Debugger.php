@@ -2,9 +2,11 @@
 
 namespace App\Utils;
 
-class Debugger {
+class Debugger
+{
 
-    public static function debug($variables = array()) {
+    public static function debug($variables = array())
+    {
         foreach ($variables as $variable) {
             echo "<pre>";
             echo "<h4>Target Variable: " . gettype($variable) . "</h4>";
@@ -14,7 +16,8 @@ class Debugger {
         }
     }
 
-    public static function debugAll($variables = array()) {
+    public static function debugAll($variables = array())
+    {
         echo "<pre>";
         echo "<h4>SERVER</h4>";
         print_r($_SERVER);
@@ -31,7 +34,4 @@ class Debugger {
             echo "</pre>";
         }
     }
-
 }
-
-?>

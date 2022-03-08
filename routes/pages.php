@@ -3,30 +3,30 @@
 use \App\Http\Response;
 use \App\Controller\Pages;
 
-// ROTA HOME
+# ROTA HOME
 $router->get('/', array(
     function () {
-        return new Response(200,Pages\Home::getHome());
+        return new Response(200, Pages\Home::getHome());
     }
-)); 
+));
 
-// ROTA SOBRE
+# ROTA SOBRE
 $router->get('/about', array(
     function () {
-        return new Response(200,Pages\About::getAbout());
+        return new Response(200, Pages\About::getAbout());
     }
 ));
 
-// ROTA DEPOIMENTOS
+# ROTA DEPOIMENTOS
 $router->get('/testimonies', array(
     function ($request) {
-        return new Response(200,Pages\Testimony::getTestimonies($request));
+        return new Response(200, Pages\Testimony::getTestimonies($request));
     }
 ));
 
-// ROTA DEPOIMENTOS (INSERT)
+# ROTA DEPOIMENTOS (INSERT)
 $router->post('/testimonies', array(
     function ($request) {
-        return new Response(200,Pages\Testimony::insertTestimony($request));
+        return new Response(200, Pages\Testimony::insertTestimony($request));
     }
 ));

@@ -3,7 +3,7 @@
 use App\Http\Response;
 use App\Controller\Api;
 
-// ROTA RAIZ DA API
+# ROTA RAIZ DA API
 $router->get('/api/v1', array(
     'middlewares' => array(
         'api'

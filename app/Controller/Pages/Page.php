@@ -5,7 +5,7 @@ namespace App\Controller\Pages;
 use \App\Utils\View;
 
 /**
- * O COntroller e responsavel por pegar os dados do Model e inserir dentro da View para ser retornado
+ * O Controller e responsavel por pegar os dados do Model e inserir dentro da View para ser retornado
  */
 class Page
 {
@@ -34,52 +34,53 @@ class Page
     public static function getPage($title, $content)
     {
         return View::render('pages/page', array(
-            'title' => $title,
-            'header' => self::getHeader(),
+            'title'   => $title,
+            'header'  => self::getHeader(),
             'content' => $content,
-            'footer' => self::getFooter()
+            'footer'  => self::getFooter()
         ));
     }
 
     /**
      * Metodo responsavel por renderizar o layout de paginacao
-     * @param Request
-     * @param Pagination
+     * @param  Request
+     * @param  Pagination
      * @return string
      */
-    public static function getPagination($request, $pagination) {
-        // PAGINAS
+    public static function getPagination($request, $pagination)
+    {
+        # PAGINAS
         $pages = $pagination->getPages();
-        
-        // VERIFICA QUANTIDADE DE PAGINAS
+
+        # VERIFICA QUANTIDADE DE PAGINAS
         if (count($pages) <= 1) return '';
 
-        // LINKS
+        # LINKS
         $links = '';
 
-        // URL DA NOSSA ROTA SEM OS GETS
+        # URL DA NOSSA ROTA SEM OS GETS
         $url = $request->getRouter()->getCurrentUrl();
-        
-        // GET
+
+        # GET
         $queryParams = $request->getQueryParams();
 
-        // RENDERIZA OS LINKS
+        # RENDERIZA OS LINKS
         foreach ($pages as $page) {
-            // ALTERA A PAGINA
+            # ALTERA A PAGINA
             $queryParams['page'] = $page['page'];
 
-            // LINKS
-            $link = $url.'?'.http_build_query($queryParams);
+            # LINKS
+            $link = $url . '?' . http_build_query($queryParams);
 
-            // RENDERIZACAO DA VIEW
+            # RENDERIZACAO DA VIEW
             $links .= View::render('pages/pagination/link', array(
                 'page'      => $page['page'],
                 'link'      => $link,
                 'active'    => $page['current'] ? 'active' : ''
             ));
         }
-        
-        // RENDERIZA BOX DE PAGINACAO
+
+        # RENDERIZA BOX DE PAGINACAO
         return View::render('pages/pagination/box', array(
             'links'  => $links
         ));

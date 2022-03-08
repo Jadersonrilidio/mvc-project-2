@@ -17,21 +17,19 @@ class About extends Page
      */
     public static function getAbout()
     {
-        // ORGANIZACAO 
+        # ORGANIZACAO 
         $obOrganization = new Organization;
 
-        // VIEW DA HOME
+        # VIEW DA HOME
         $content =  View::render('pages/about', array(
-            'name' => $obOrganization->name,
+            'name'        => $obOrganization->name,
             'description' => $obOrganization->description,
-            'site' => $obOrganization->site,
-            'header' => 'Lorem Ipsum Stuff',
-            'content' => 'Lorem ipsum dolor sit amet consectetur, adipisicing elit. Eaque ab labore reprehenderit laboriosam nemo minima, obcaecati tempore sapiente itaque, neque voluptas nostrum nulla quis cupiditate dolorem architecto accusantium! Expedita, repellat.'
+            'site'        => $obOrganization->site,
+            'header'      => 'Lorem Ipsum Stuff',
+            'content'     => 'Lorem ipsum dolor sit amet consectetur, adipisicing elit. Eaque ab labore reprehenderit laboriosam nemo minima, obcaecati tempore sapiente itaque, neque voluptas nostrum nulla quis cupiditate dolorem architecto accusantium! Expedita, repellat.'
         ));
 
-        // RETORNA A VIEW DA PAGINA
+        # RETORNA A VIEW DA PAGINA
         return parent::getPage('JayDev - About', $content);
     }
 }
-
-?>

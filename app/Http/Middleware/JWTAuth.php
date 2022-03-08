@@ -2,10 +2,10 @@
 
 namespace App\Http\Middleware;
 
-use \Exception;
 use App\Model\Entity\User;
 use Firebase\JWT\JWT;
 use Firebase\JWT\Key;
+use \Exception;
 
 class JWTAuth implements MiddlewareInterface
 {

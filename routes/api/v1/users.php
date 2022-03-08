@@ -3,7 +3,7 @@
 use App\Http\Response;
 use App\Controller\Api;
 
-// ROTA DE LISTAGEM DE USUARIOS
+# ROTA DE LISTAGEM DE USUARIOS
 $router->get('/api/v1/users', array(
     'middlewares' => array(
         'api',
@@ -15,7 +15,7 @@ $router->get('/api/v1/users', array(
     }
 ));
 
-// ROTA DE CONSULTA DO USUARIO ATUAL
+# ROTA DE CONSULTA DO USUARIO ATUAL
 $router->get('/api/v1/users/me', array(
     'middlewares' => array(
         'api',
@@ -26,7 +26,7 @@ $router->get('/api/v1/users/me', array(
     }
 ));
 
-// ROTA DE CONSULTA INDIVIDUAL DE USUARIOS
+# ROTA DE CONSULTA INDIVIDUAL DE USUARIOS
 $router->get('/api/v1/users/{id}', array(
     'middlewares' => array(
         'api',
@@ -38,7 +38,7 @@ $router->get('/api/v1/users/{id}', array(
     }
 ));
 
-// ROTA DE CADASTRO DE USUARIOS
+# ROTA DE CADASTRO DE USUARIOS
 $router->post('/api/v1/users', array(
     'middlewares' => array(
         'api',
@@ -49,7 +49,7 @@ $router->post('/api/v1/users', array(
     }
 ));
 
-// ROTA DE ATUALIZACAO DE USUARIOS
+# ROTA DE ATUALIZACAO DE USUARIOS
 $router->put('/api/v1/users/{id}', array(
     'middlewares' => array(
         'api',
@@ -60,7 +60,7 @@ $router->put('/api/v1/users/{id}', array(
     }
 ));
 
-// ROTA DE EXCLUSAO DE USUARIOS
+# ROTA DE EXCLUSAO DE USUARIOS
 $router->delete('/api/v1/users/{id}', array(
     'middlewares' => array(
         'api',

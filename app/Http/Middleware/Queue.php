@@ -4,7 +4,8 @@ namespace App\Http\Middleware;
 
 use \Closure;
 
-class Queue {
+class Queue
+{
 
     /**
      * Mapeamento de middlewares [apelido, alias, classe que corresponde]
@@ -42,9 +43,10 @@ class Queue {
      * @param Closure $controller
      * @param array $controllerArgs
      */
-    public function __construct($middlewares, $controller, $controllerArgs) {
-        $this->middlewares = array_merge(self::$default, $middlewares);
-        $this->controller = $controller;
+    public function __construct($middlewares, $controller, $controllerArgs)
+    {
+        $this->middlewares    = array_merge(self::$default, $middlewares);
+        $this->controller     = $controller;
         $this->controllerArgs = $controllerArgs;
     }
 
@@ -52,7 +54,8 @@ class Queue {
      * Metodo responsavel por definir o mapeamento de middlewares
      * @param array $map
      */
-    public static function setMap($map) {
+    public static function setMap($map)
+    {
         self::$map = $map;
     }
 
@@ -60,37 +63,35 @@ class Queue {
      * Metodo responsavel por definir o mapeamento de middlewares padroes
      * @param array $default
      */
-    public static function setDefault($default) {
+    public static function setDefault($default)
+    {
         self::$default = $default;
     }
 
     /** Metodo responsavel por executar o proximo nivel da fila de middlewares 
-     * @param Request
+     * @param  Request
      * @return Response
      */
-    public function next($request) {
-        // VERIFICA SE A FILA ESTA VAZIA
+    public function next($request)
+    {
+        # VERIFICA SE A FILA ESTA VAZIA
         if (empty($this->middlewares)) return call_user_func_array($this->controller, $this->controllerArgs);
 
-        // PEGA NOME DO PROXIMO MIDDLEWARE E RETIRA DA FILA
+        # PEGA NOME DO PROXIMO MIDDLEWARE E RETIRA DA FILA
         $middleware = array_shift($this->middlewares);
 
-        // VERIFICA O MAPEAMENTO
+        # VERIFICA O MAPEAMENTO
         if (!isset(self::$map[$middleware])) {
             throw new \Exception("Problemas ao processar o middleware da requisicao ", 500);
         }
 
-        // NEXT
+        # NEXT
         $queue = $this;
-        $next = function($request) use($queue) {
+        $next = function ($request) use ($queue) {
             return $queue->next($request);
         };
 
-        // EXECUTA O MIDDLEWARE
+        # EXECUTA O MIDDLEWARE
         return (new self::$map[$middleware])->handle($request, $next);
     }
-
 }
-
-
-?>

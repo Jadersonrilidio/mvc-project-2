@@ -88,7 +88,6 @@ class User
         return (new Database('users'))->update('id = ' . $this->id, array(
             'username'  => $this->username,
             'email'     => $this->email
-            /*'password'  =>$this->password */
         ));
     }
 

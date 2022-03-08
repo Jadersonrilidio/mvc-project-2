@@ -2,8 +2,6 @@
 
 namespace App\Http;
 
-use App\Utils\Debugger;
-
 class Request
 {
 
@@ -49,10 +47,10 @@ class Request
      */
     public function __construct($router)
     {
-        $this->router = $router;
+        $this->router      = $router;
         $this->queryParams = $_GET ?? array();
-        $this->headers = getallheaders();
-        $this->httpMethod = $_SERVER['REQUEST_METHOD'];
+        $this->headers     = getallheaders();
+        $this->httpMethod  = $_SERVER['REQUEST_METHOD'];
         $this->setPostVars();
         $this->setUri();
     }
@@ -62,14 +60,14 @@ class Request
      */
     private function setPostVars()
     {
-        // VERIFICA O METODO DA REQUISICAO
+        # VERIFICA O METODO DA REQUISICAO
         if ($this->httpMethod == 'GET') return false;
 
-        // POST PADRAO
+        # POST PADRAO
         $this->postVars = $_POST ?? array();
 
-        // POST JSON
-        $inputRaw = file_get_contents('php://input');
+        # POST JSON
+        $inputRaw = file_get_contents('php:#input');
         $this->postVars = (strlen($inputRaw) and empty($_POST)) ? json_decode($inputRaw, true) : $this->postVars;
     }
 
@@ -78,13 +76,13 @@ class Request
      */
     private function setUri()
     {
-        // URI COMPLETA COM GETS
+        # URI COMPLETA COM GETS
         $this->uri = $_SERVER['REQUEST_URI'];
 
-        // REMOVE GETS DA URI
+        # REMOVE GETS DA URI
         $xUri = explode('?', $this->uri);
 
-        // RETORNA A URI SEM OS GETS
+        # RETORNA A URI SEM OS GETS
         $this->uri = $xUri[0];
     }
 

@@ -15,10 +15,10 @@ class UserBasicAuth implements MiddlewareInterface
      */
     public function handle($request, $next)
     {
-        // REALIZA A VALIDACAO DO ACESSO VIA BASIC AUTH
+        # REALIZA A VALIDACAO DO ACESSO VIA BASIC AUTH
         $this->basicAuth($request);
 
-        // CONTINUA A EXECUCAO DO MIDDLEWARE
+        # CONTINUA A EXECUCAO DO MIDDLEWARE
         return $next($request);
     }
 
@@ -28,13 +28,13 @@ class UserBasicAuth implements MiddlewareInterface
      */
     private function basicAuth($request)
     {
-        // VERIFICA O USUARIO RECEBIDO
+        # VERIFICA O USUARIO RECEBIDO
         if ($user = $this->getBasicAuthUser()) {
             $request->user = $user;
             return true;
         }
 
-        // EMITE UM ERRO DE SENHA INVALIDA
+        # EMITE UM ERRO DE SENHA INVALIDA
         throw new Exception("invalid email or password", 403);
     }
 
@@ -44,20 +44,20 @@ class UserBasicAuth implements MiddlewareInterface
      */
     private function getBasicAuthUser()
     {
-        // VERIFICA A EXISTENCIA DOS DADOS DE ACESSO
+        # VERIFICA A EXISTENCIA DOS DADOS DE ACESSO
         if (!isset($_SERVER['PHP_AUTH_USER']) or !isset($_SERVER['PHP_AUTH_PW'])) {
             return false;
         }
 
-        // BUSCA O USUARIO PELO EMAIL
+        # BUSCA O USUARIO PELO EMAIL
         $user = User::getUserByEmail($_SERVER['PHP_AUTH_USER']);
 
-        // VERIFICA A INSTANCIA
+        # VERIFICA A INSTANCIA
         if (!$user instanceof User) {
             return false;
         }
 
-        // VALIDA SENHA E RETORNA O USUARIO
+        # VALIDA SENHA E RETORNA O USUARIO
         return password_verify($_SERVER['PHP_AUTH_PW'], $user->password) ? $user : false;
     }
 }

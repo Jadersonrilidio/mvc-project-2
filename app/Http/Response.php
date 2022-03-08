@@ -1,8 +1,10 @@
 <?php
+
 namespace App\Http;
 
-class Response {
-    
+class Response
+{
+
     /**
      * O codigo do status HTTP;
      * @var int
@@ -33,9 +35,10 @@ class Response {
      * @param mixed
      * @param string
      */
-    public function __construct($httpCode, $content, $contentType = 'text/html') {
+    public function __construct($httpCode, $content, $contentType = 'text/html')
+    {
         $this->httpCode = $httpCode;
-        $this->content = $content;
+        $this->content  = $content;
         $this->setContentType($contentType);
     }
 
@@ -43,7 +46,8 @@ class Response {
      * Metodo responsavel por alterar o contentType do response;
      * @var string
      */
-    private function setContentType($contentType) {
+    private function setContentType($contentType)
+    {
         $this->contentType = $contentType;
         $this->addHeader('Content-Type', $contentType);
     }
@@ -53,20 +57,22 @@ class Response {
      * @var string
      * @var string
      */
-    private function addHeader($key, $value) {
-        $this->headers[$key] = $value; 
+    private function addHeader($key, $value)
+    {
+        $this->headers[$key] = $value;
     }
 
     /**
      * Metodo responsavel por enviar os headers para o navegador;
      */
-    private function sendHeaders() {
-        // STATUS
+    private function sendHeaders()
+    {
+        # STATUS
         http_response_code($this->httpCode);
 
-        //ENVIAR TODOS OS HEADERS
-        foreach($this->headers as $key => $value) {
-            header($key.': '.$value);
+        # ENVIAR TODOS OS HEADERS
+        foreach ($this->headers as $key => $value) {
+            header($key . ': ' . $value);
         }
     }
 
@@ -74,11 +80,12 @@ class Response {
      * Metodo responsavel por enviar a resposta ao usuario (na forma imprimindo em tela);
      * @return mixed
      */
-    public function sendResponse() {
-        // ENVIA OS HEADERS
+    public function sendResponse()
+    {
+        # ENVIA OS HEADERS
         $this->sendHeaders();
 
-        // IMPRIME O CONTEUDO
+        # IMPRIME O CONTEUDO
         switch ($this->contentType) {
             case 'text/html':
                 echo $this->content;
@@ -93,6 +100,4 @@ class Response {
                 exit;
         }
     }
-
-
 }

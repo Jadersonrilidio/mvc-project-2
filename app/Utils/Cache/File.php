@@ -2,8 +2,6 @@
 
 namespace App\Utils\Cache;
 
-use App\Utils\Debugger;
-
 class File
 {
     /**

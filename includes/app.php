@@ -5,7 +5,7 @@ require __DIR__ . '/../vendor/autoload.php';
 use \App\Utils;
 use \App\Http\Middleware\Queue as MiddlewareQueue;
 
-#LOAD ENVIRONMENT VARS FROM FILE ON ROOT
+# LOAD ENVIRONMENT VARS FROM FILE ON ROOT
 Utils\Environment::load(__DIR__ . '/../');
 
 # DEFINE AS CONFIGURACOES DE BANCO DE DADOS
